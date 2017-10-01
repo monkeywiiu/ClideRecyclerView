@@ -17,7 +17,8 @@ public class MyCallBack extends ItemTouchHelper.SimpleCallback {
     OnSwipeListener mOnSwipeListener;
     OnSwipingListener mOnSwipingListener;
     RecyclerView mRecycler;
-    int mHorizontalDeviation = 500; //水平偏移阈值，用于判断是否为垂直方向额滑动
+    boolean SwipeHorizontal;
+    //int mHorizontalDeviation = 500; //水平偏移阈值，用于判断是否为垂直方向额滑动
     int mSwipeDir = ItemTouchHelper.UP; //手指滑动的方向(第一次滑动后setSwipeDirection()，所以要先定义初值)
 
     public MyCallBack(Context context, int dragDirs, int swipeDirs) {
@@ -61,31 +62,34 @@ public class MyCallBack extends ItemTouchHelper.SimpleCallback {
         mOnSwipeListener.onSwiped(position, direction);
     }
 
-    public boolean isSwipedHorizontal(View view) {
-
-        float x = getRV().getWidth() / 2 - (view.getX() + view.getWidth() / 2);
-        Log.d("deviation", x + "");
-        return Math.abs(getRV().getWidth() / 2 - (view.getX() + view.getWidth() / 2)) < mHorizontalDeviation;
+    public void isSwipedHorizontal(float dx) {
+        if (Math.abs(dx) > 500) {
+            SwipeHorizontal = true;
+        } else {
+            SwipeHorizontal = false;
+        }
     }
 
     //设置回收的阈值
     @Override
     public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
-        if(isSwipedHorizontal(viewHolder.itemView)) {
+        if(SwipeHorizontal) {
             Log.d("Float", Float.MAX_VALUE + "");
-            return Float.MAX_VALUE;
-        }else {
             return 0.3f;
+
+        }else {
+            return Float.MAX_VALUE;
         }
     }
     //设置最大逃脱速度
     @Override
     public float getSwipeEscapeVelocity(float defaultValue) {
         /*当滑动方向为UP或DOWN是无法逃脱*/
-        if (getSwipeDirection() == ItemTouchHelper.UP | getSwipeDirection() == ItemTouchHelper.DOWN) {
-            return Float.MAX_VALUE;
-        }else {
+        if (SwipeHorizontal) {
             return super.getSwipeEscapeVelocity(defaultValue) / 10;
+
+        }else {
+            return Float.MAX_VALUE;
         }
 
     }
@@ -139,5 +143,6 @@ public class MyCallBack extends ItemTouchHelper.SimpleCallback {
         }
 
         mOnSwipingListener.onSwiping(fraction, dX);
+        isSwipedHorizontal(dX);
     }
 }
