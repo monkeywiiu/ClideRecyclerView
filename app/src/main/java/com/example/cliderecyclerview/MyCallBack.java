@@ -15,9 +15,11 @@ public class MyCallBack extends ItemTouchHelper.SimpleCallback {
     static float SCALE_VALUE = 0.05f;
     static float TRAN_Y;
     OnSwipeListener mOnSwipeListener;
+    OnSwipingListener mOnSwipingListener;
     RecyclerView mRecycler;
     int mHorizontalDeviation = 500; //水平偏移阈值，用于判断是否为垂直方向额滑动
     int mSwipeDir = ItemTouchHelper.UP; //手指滑动的方向(第一次滑动后setSwipeDirection()，所以要先定义初值)
+
     public MyCallBack(Context context, int dragDirs, int swipeDirs) {
         super(dragDirs, swipeDirs);
         TRAN_Y = (int) (15 * context.getResources().getDisplayMetrics().density);
@@ -25,6 +27,18 @@ public class MyCallBack extends ItemTouchHelper.SimpleCallback {
 
     public interface OnSwipeListener{
         void onSwiped(int position, int direction);
+    }
+
+    public interface OnSwipingListener {
+        void onSwiping(float fraction, float dX);
+    }
+
+    public void setOnSwipeListener(OnSwipeListener onSwipeListener) {
+        mOnSwipeListener = onSwipeListener;
+    }
+
+    public void setOnSwipingListener(OnSwipingListener onSwipingListener) {
+        mOnSwipingListener = onSwipingListener;
     }
 
     public void setRV(RecyclerView recyclerView) {
@@ -41,15 +55,14 @@ public class MyCallBack extends ItemTouchHelper.SimpleCallback {
     public int getSwipeDirection(){
         return mSwipeDir;
     }
-    public void setOnSwipeListener(OnSwipeListener onSwipeListener) {
-        mOnSwipeListener = onSwipeListener;
-    }
+
 
     public void notifyListener(int position, int direction){
         mOnSwipeListener.onSwiped(position, direction);
     }
 
     public boolean isSwipedHorizontal(View view) {
+
         float x = getRV().getWidth() / 2 - (view.getX() + view.getWidth() / 2);
         Log.d("deviation", x + "");
         return Math.abs(getRV().getWidth() / 2 - (view.getX() + view.getWidth() / 2)) < mHorizontalDeviation;
@@ -60,7 +73,7 @@ public class MyCallBack extends ItemTouchHelper.SimpleCallback {
     public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
         if(isSwipedHorizontal(viewHolder.itemView)) {
             Log.d("Float", Float.MAX_VALUE + "");
-            return 1f;
+            return Float.MAX_VALUE;
         }else {
             return 0.3f;
         }
@@ -103,9 +116,9 @@ public class MyCallBack extends ItemTouchHelper.SimpleCallback {
             level = count - i;
             if (level == 1) {
                 if (dX < -20) {
-                    view.setRotation(30 * fraction);
+                    view.setRotation(15 * fraction);
                 }else if (dX > 20) {
-                    view.setRotation(-30 * fraction);
+                    view.setRotation(-15 * fraction);
                 }else {
                     view.setRotation(0);
                 }
@@ -124,5 +137,7 @@ public class MyCallBack extends ItemTouchHelper.SimpleCallback {
                 Log.d("done", "done");
             }
         }
+
+        mOnSwipingListener.onSwiping(fraction, dX);
     }
 }

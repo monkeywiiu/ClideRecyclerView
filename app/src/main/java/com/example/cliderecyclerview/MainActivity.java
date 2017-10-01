@@ -32,8 +32,18 @@ public class MainActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
             }
         });
-        new ItemTouchHelper(myCallBack).attachToRecyclerView(mRecyclerView);
+        myCallBack.setOnSwipingListener(new MyCallBack.OnSwipingListener() {
+            @Override
+            public void onSwiping(float fraction, float dX) {
+                if (dX > 0) {
+                    mAdapter.getLastViewHolder().heartShapeView.setAlpha(fraction);
+                }
 
+            }
+
+        });
+        new ItemTouchHelper(myCallBack).attachToRecyclerView(mRecyclerView);
+        //mAdapter.getLastViewHolder().
     }
 
 }

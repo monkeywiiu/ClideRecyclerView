@@ -20,6 +20,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public List<FillCardBean> mDatas;
     public Context mContext;
+    MyViewHolder lastHolder;
 
     public MyAdapter(Context context, List<FillCardBean> list) {
         mDatas = list;
@@ -29,8 +30,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
         public ImageView imageView;
+        public HeartShapeView heartShapeView;
         public MyViewHolder(View itemView) {
             super(itemView);
+            heartShapeView = itemView.findViewById(R.id.like);
             imageView = itemView.findViewById(R.id.card_image);
             textView =  itemView.findViewById(R.id.card_text);
         }
@@ -49,10 +52,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         Glide.with(mContext).load(mDatas.get(position).url).into(holder.imageView);
         //Log.d("url", mDatas.get(position).url);
         holder.textView.setText(mDatas.get(position).name);
+        if (position == mDatas.size() - 1) {
+            setLastViewHolder(holder);
+        }
     }
 
     @Override
     public int getItemCount() {
         return mDatas.size();
+    }
+
+    public void setLastViewHolder(MyViewHolder holder) {
+        lastHolder = holder;
+    }
+
+    public MyViewHolder getLastViewHolder(){
+        return lastHolder;
     }
 }
