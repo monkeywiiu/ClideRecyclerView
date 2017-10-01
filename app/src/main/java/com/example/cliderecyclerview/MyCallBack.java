@@ -96,30 +96,32 @@ public class MyCallBack extends ItemTouchHelper.SimpleCallback {
         int count = recyclerView.getChildCount();
         int level;
         float fraction;
-        fraction = dX / getRV().getWidth();
+        fraction = Math.abs(dX / getRV().getWidth());
+        Log.d("fraction", fraction+"");
         for (int i = 0; i < count; i++) {
             View view = recyclerView.getChildAt(i);
             level = count - i;
             if (level == 1) {
                 if (dX < -20) {
-                    view.setRotation(-30 * fraction);
+                    view.setRotation(30 * fraction);
                 }else if (dX > 20) {
                     view.setRotation(-30 * fraction);
                 }else {
                     view.setRotation(0);
                 }
             }else if (level == 2) {
-                view.setTranslationY(fraction * TRAN_Y / 10);
-                view.setScaleX(1 + fraction * SCALE_VALUE);
-                view.setScaleY(1 + fraction * SCALE_VALUE);
+                view.setTranslationY(TRAN_Y - fraction *TRAN_Y );
+                view.setScaleX(0.95f + fraction * SCALE_VALUE);
+                view.setScaleY(0.95f + fraction * SCALE_VALUE);
             }else if (level == 3) {
-                view.setTranslationY(-fraction * TRAN_Y / 10);
-                view.setScaleX(1 + fraction * SCALE_VALUE);
-                view.setScaleY(1 + fraction * SCALE_VALUE);
-            }else if (level == 3) {
-                view.setTranslationY(-fraction * TRAN_Y / 10);
-                view.setScaleX(1 + fraction * SCALE_VALUE);
-                view.setScaleY(1 + fraction * SCALE_VALUE);
+                view.setTranslationY(2 * TRAN_Y - fraction *TRAN_Y);
+                view.setScaleX(0.90f + fraction * SCALE_VALUE);
+                view.setScaleY(0.90f + fraction * SCALE_VALUE);
+            }else if (level == 4) {
+                view.setTranslationY(3 * TRAN_Y - fraction *TRAN_Y );
+                view.setScaleX(0.85f + fraction * SCALE_VALUE);
+                view.setScaleY(0.85f + fraction * SCALE_VALUE);
+                Log.d("done", "done");
             }
         }
     }
