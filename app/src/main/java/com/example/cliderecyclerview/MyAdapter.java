@@ -31,11 +31,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public TextView textView;
         public ImageView imageView;
         public HeartShapeView heartShapeView;
+        public ForkShapeView forkShapeView;
         public MyViewHolder(View itemView) {
             super(itemView);
-            heartShapeView = itemView.findViewById(R.id.like);
+
             imageView = itemView.findViewById(R.id.card_image);
             textView =  itemView.findViewById(R.id.card_text);
+            heartShapeView = itemView.findViewById(R.id.like);
+            forkShapeView = itemView.findViewById(R.id.not_like);
         }
     }
     @Override

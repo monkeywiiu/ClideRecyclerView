@@ -37,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
             public void onSwiping(float fraction, float dX) {
                 if (dX > 0) {
                     mAdapter.getLastViewHolder().heartShapeView.setAlpha(fraction);
+                }else if (dX < 0){
+                    mAdapter.getLastViewHolder().forkShapeView.setAlpha(fraction);
                 }
-
             }
 
         });

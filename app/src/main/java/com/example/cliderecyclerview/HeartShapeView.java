@@ -17,7 +17,7 @@ import android.view.View;
 public class HeartShapeView extends View {
     Paint mPaint;
     Path mPath;
-    int heartColor;
+    int heartColor, canvasColor;
     int width, height;
     public HeartShapeView(Context context) {
         super(context);
@@ -26,10 +26,9 @@ public class HeartShapeView extends View {
     public HeartShapeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.HeartView);
-        heartColor = ta.getColor(R.styleable.HeartView_heartColor, Color.BLUE);
+        heartColor = ta.getColor(R.styleable.HeartView_heartColor, Color.WHITE);
+        canvasColor = ta.getColor(R.styleable.HeartView_hCanvasColor, Color.RED);
         mPaint = new Paint();
-        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mPaint.setColor(heartColor);
         mPath = new Path();
     }
 
@@ -38,13 +37,24 @@ public class HeartShapeView extends View {
         super.onDraw(canvas);
         width = getMeasuredWidth();
         height = getMeasuredHeight();
-        mPath.moveTo(width / 2, height /4);
-        mPath.cubicTo(width, 0, width, 9 * height / 10, width / 2, height);
-        //mPath.rCubicTo(0, 3 / 4 * height, 0, 0, width / 2, height / 4);
+        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mPaint.setColor(canvasColor);
+        canvas.drawCircle(width / 2 , height / 2, width / 2, mPaint);
+        mPaint.setColor(heartColor);
+        //右半边心
+        mPath.moveTo(width / 2, height * (5f / 12f - 1f /15f ));
+        mPath.cubicTo(width * 3f / 4f, height * (1f / 4f - 1f /15f ), width * 5 / 6, height * (2f / 3f - 1f /15f), width / 2, height * (3f / 4f - 1f /15f));
         canvas.drawPath(mPath, mPaint);
         mPath.reset();
-        mPath.moveTo(width / 2, height / 4);
-        mPath.cubicTo(0, 0, 0, 9 * height / 10, width / 2, height);
+        //左半边心
+        mPath.moveTo(width / 2, height * (5f / 12f - 1f /15f ));
+        mPath.cubicTo(width / 4f, height * (1f / 4f - 1f /15f ), width / 6f, height * (2f / 3f - 1f /15f), width / 2, height * (3f / 4f - 1f /15f));
+        canvas.drawPath(mPath, mPaint);
+        mPath.reset();
+        //填充空隙
+        mPath.moveTo(width / 2, height * (5f / 12f - 1f /15f ));
+        mPath.lineTo(width / 2, height * (3f / 4f - 1f /15f));
+        mPaint.setStrokeWidth(2);
         canvas.drawPath(mPath, mPaint);
     }
 }

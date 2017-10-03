@@ -2,5 +2,8 @@
 <resources>
     <declare-styleable name="HeartView">
         <attr name="heartColor" format="color"/>
+        <attr name="forkColor" format="color"/>
+        <attr name="hCanvasColor" format="color"/>
+        <attr name="fCanvasColor" format="color"/>
     </declare-styleable>
 </resources>
